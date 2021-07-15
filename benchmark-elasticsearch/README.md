@@ -1,26 +1,30 @@
-Create Index Template
+# Elasticsearch Benchmark
 
-```
-java -jar benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar template \
+## Command
+
+* Create Index Template
+
+```shell
+java -jar benchmark-elasticsearch-1.0.0.jar template \
 --host 10.1.207.180:9200,10.1.207.181:9200,10.1.207.182:9200 \
 --name titanic \
 --file /Users/zhanglei/asiainfo/gitlab/upstream/elastic-benchmark/data/elasticsearch/importcsv/titanic/titanic_index.json
 ```
 
-Delete And Create Index Template 
+* Delete And Create Index Template 
 
-```
-java -jar benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar template \
+```shell
+java -jar benchmark-elasticsearch-1.0.0.jar template \
 -D \
 --host 10.1.207.180:9200,10.1.207.181:9200,10.1.207.182:9200 \
 --name titanic \
 --file /Users/zhanglei/asiainfo/gitlab/upstream/elastic-benchmark/data/elasticsearch/importcsv/titanic/titanic_index.json
 ```
 
-Import CSV Files
+* Import CSV Files
 
-```
-java -jar benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar importcsv \
+```shell
+java -jar benchmark-elasticsearch-1.0.0.jar importcsv \
 --host 10.1.207.180:9200,10.1.207.181:9200,10.1.207.182:9200 \
 --name titanic \
 --batch 10000 \
@@ -30,9 +34,11 @@ java -jar benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar impor
 --id 1
 ```
 
-## 优化
+## Improve write throughput performance
 
-1. 禁用集群负载
+1. Improve Cluster Settings
+ 
+* Disable shard reallocation of all shards
 
 ```shell
 curl -X PUT "10.1.207.180:9200/_cluster/settings?flat_settings=true&pretty" -H 'Content-Type: application/json' -d'
@@ -44,7 +50,12 @@ curl -X PUT "10.1.207.180:9200/_cluster/settings?flat_settings=true&pretty" -H '
 '
 ```
 
-2. 禁用副本、刷新间隔、日志写入策略等
+2. Improve Index Settings
+
+* Disable replicase
+* Increase index.refresh_interval
+* Set index.translog.durability to Async
+* Decrease merge scheduler to 1 for spinning platter drives
 
 ```shell
 curl -X PUT "10.1.207.180:9200/titanic/_settings?pretty" -H 'Content-Type: application/json' -d'

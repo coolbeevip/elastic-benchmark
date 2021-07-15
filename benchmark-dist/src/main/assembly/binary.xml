@@ -1,0 +1,36 @@
+<assembly
+  xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>dist</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/lib</outputDirectory>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <includes>
+        <include>bin/**</include>
+      </includes>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../benchmark-elasticsearch/target/lib/</directory>
+      <outputDirectory>lib</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>${project.basedir}/../benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar</source>
+      <outputDirectory>/bin</outputDirectory>
+    </file>
+    <file>
+      <source>${project.basedir}/../benchmark-common/target/classes/logback.xml</source>
+      <outputDirectory>/config</outputDirectory>
+    </file>
+  </files>
+</assembly>

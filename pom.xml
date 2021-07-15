@@ -9,6 +9,28 @@
   <packaging>pom</packaging>
   <version>${revision}</version>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Lei Zhang &lt;zhanglei@apache.org&gt;</name>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Lei Zhang</name>
+      <email>zhanglei AT apache.org</email>
+      <url>https://github.com/coolbeevip</url>
+    </developer>
+  </developers>
+
+  <inceptionYear>2020</inceptionYear>
+
   <properties>
     <revision>1.0.0</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,12 +39,15 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+    <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+    <license-maven-plugin.version>3.0</license-maven-plugin.version>
   </properties>
 
   <modules>
     <module>benchmark-dependencies</module>
     <module>benchmark-common</module>
     <module>benchmark-elasticsearch</module>
+    <module>benchmark-dist</module>
   </modules>
 
   <build>
@@ -33,27 +58,56 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven-compiler-plugin.version}</version>
         </plugin>
-
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${license-maven-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spring-bees</groupId>
+              <artifactId>spring-beet-buildtools</artifactId>
+              <version>${spring-beet-buildtools.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <header>spring-beet-buildtools/license/license_header.tpl</header>
+            <includes>
+              <include>**/*.java</include>
+              <include>**/*.xml</include>
+              <include>**/*.yaml</include>
+              <include>**/*.yml</include>
+              <include>**/*.properties</include>
+              <include>**/*.factories</include>
+            </includes>
+            <excludes>
+              <exclude>**/.mvn/**</exclude>
+              <exclude>**/*.md</exclude>
+            </excludes>
+            <properties>
+              <owner>Lei Zhang</owner>
+              <email>zhanglei@apache.org</email>
+            </properties>
+            <mapping>
+              <factories>SCRIPT_STYLE</factories>
+            </mapping>
+          </configuration>
           <executions>
             <execution>
-              <phase>package</phase>
               <goals>
-                <goal>single</goal>
+                <goal>check</goal>
               </goals>
-              <configuration>
-                <finalName>${artifactId}-${version}</finalName>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-                <appendAssemblyId>false</appendAssemblyId>
-              </configuration>
             </execution>
           </executions>
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${license-maven-plugin.version}</version>
+      </plugin>
+    </plugins>
   </build>
 </project>

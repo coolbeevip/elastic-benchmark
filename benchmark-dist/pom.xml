@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>elastic-benchmark</artifactId>
+    <groupId>com.coolbeevip</groupId>
+    <version>${revision}</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+  <artifactId>benchmark-dist</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>elastic-benchmark-bin</finalName>
+              <descriptors>
+                <descriptor>src/main/assembly/binary.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <attach>true</attach>
+          <runOnlyAtExecutionRoot>false</runOnlyAtExecutionRoot>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

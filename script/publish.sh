@@ -113,22 +113,22 @@ pre_release_steps(){
 
   RELEASE_STEP_SCRIPTS+=("--------------------------------------------------------------------")
   RELEASE_STEP_SCRIPTS+=("STEP2: Create release Tag $RELEASE_VERSION")
-  RELEASE_STEP_SCRIPTS+=("git checkout master")
+  RELEASE_STEP_SCRIPTS+=("git checkout main")
   modify_maven_project_version $RELEASE_VERSION
   RELEASE_STEP_SCRIPTS+=("git commit -a -m 'Upgrade Version to v$RELEASE_VERSION'")
   RELEASE_STEP_SCRIPTS+=("git tag -a v$RELEASE_VERSION -m 'Release v$RELEASE_VERSION'")
   RELEASE_STEP_SCRIPTS+=("git push origin v$RELEASE_VERSION")
 
   RELEASE_STEP_SCRIPTS+=("--------------------------------------------------------------------")
-  RELEASE_STEP_SCRIPTS+=("STEP3: Update branch master version to $NEXT_VERSION")
+  RELEASE_STEP_SCRIPTS+=("STEP3: Update branch main version to $NEXT_VERSION")
   modify_maven_project_version $NEXT_VERSION
   RELEASE_STEP_SCRIPTS+=("git commit -a -m 'Upgrade Release Version $NEXT_VERSION'")
-  RELEASE_STEP_SCRIPTS+=("git push origin master")
+  RELEASE_STEP_SCRIPTS+=("git push origin main")
   RELEASE_STEP_SCRIPTS+=("--------------------------------------------------------------------")
   RELEASE_STEP_SCRIPTS+=("STEP4: The $RELEASE_VERSION release is successful")
   RELEASE_STEP_SCRIPTS+=("STEP5: Please check branch $RELEASE_BRANCH_NAME exist in the git repository")
   RELEASE_STEP_SCRIPTS+=("STEP6: Please check release tag v$RELEASE_VERSION exist in the git repository")
-  RELEASE_STEP_SCRIPTS+=("STEP7: Please check master version changed to $NEXT_VERSION in the git repository")
+  RELEASE_STEP_SCRIPTS+=("STEP7: Please check main version changed to $NEXT_VERSION in the git repository")
 }
 
 main(){

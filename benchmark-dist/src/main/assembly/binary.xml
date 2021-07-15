@@ -35,7 +35,7 @@
   </fileSets>
   <files>
     <file>
-      <source>${project.basedir}/../benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar</source>
+      <source>${project.basedir}/../benchmark-elasticsearch/target/benchmark-elasticsearch-${version}.jar</source>
       <outputDirectory>/</outputDirectory>
     </file>
     <file>

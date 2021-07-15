@@ -62,15 +62,8 @@
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <version>${license-maven-plugin.version}</version>
-          <dependencies>
-            <dependency>
-              <groupId>com.github.spring-bees</groupId>
-              <artifactId>spring-beet-buildtools</artifactId>
-              <version>${spring-beet-buildtools.version}</version>
-            </dependency>
-          </dependencies>
           <configuration>
-            <header>spring-beet-buildtools/license/license_header.tpl</header>
+            <header>LICENSE_HEADER.tpl</header>
             <includes>
               <include>**/*.java</include>
               <include>**/*.xml</include>

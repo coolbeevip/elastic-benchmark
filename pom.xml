@@ -24,7 +24,7 @@
   <groupId>com.coolbeevip</groupId>
   <artifactId>elastic-benchmark</artifactId>
   <packaging>pom</packaging>
-  <version>${revision}</version>
+  <version>1.0.0</version>
 
   <licenses>
     <license>

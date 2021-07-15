@@ -23,31 +23,32 @@
   <formats>
     <format>tar.gz</format>
   </formats>
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>/lib</outputDirectory>
-    </dependencySet>
-  </dependencySets>
   <fileSets>
-    <fileSet>
-      <includes>
-        <include>bin/**</include>
-      </includes>
-      <fileMode>0755</fileMode>
-    </fileSet>
     <fileSet>
       <directory>${project.basedir}/../benchmark-elasticsearch/target/lib/</directory>
       <outputDirectory>lib</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../data/</directory>
+      <outputDirectory>example</outputDirectory>
     </fileSet>
   </fileSets>
   <files>
     <file>
       <source>${project.basedir}/../benchmark-elasticsearch/target/benchmark-elasticsearch-1.0.0.jar</source>
-      <outputDirectory>/bin</outputDirectory>
+      <outputDirectory>/</outputDirectory>
     </file>
     <file>
-      <source>${project.basedir}/../benchmark-common/target/classes/logback.xml</source>
-      <outputDirectory>/config</outputDirectory>
+      <source>${project.basedir}/../LICENSE</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+    <file>
+      <source>${project.basedir}/../NOTICE</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+    <file>
+      <source>${project.basedir}/../benchmark-elasticsearch/README.md</source>
+      <outputDirectory>/</outputDirectory>
     </file>
   </files>
 </assembly>

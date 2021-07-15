@@ -40,7 +40,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <finalName>elastic-benchmark-bin</finalName>
+              <finalName>elastic-benchmark-${version}-bin</finalName>
               <descriptors>
                 <descriptor>src/main/assembly/binary.xml</descriptor>
               </descriptors>

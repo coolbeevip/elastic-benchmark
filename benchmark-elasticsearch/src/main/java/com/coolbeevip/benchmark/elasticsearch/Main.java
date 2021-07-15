@@ -1,0 +1,50 @@
+package com.coolbeevip.benchmark.elasticsearch;
+
+import com.beust.jcommander.JCommander;
+import com.coolbeevip.benchmark.elasticsearch.importcsv.ElasticsearchImportCsvCommand;
+import com.coolbeevip.benchmark.elasticsearch.template.ElasticsearchTemplateCommand;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+  public static void main(String[] args) {
+
+    ElasticsearchTemplateCommand commandTemplate = new ElasticsearchTemplateCommand();
+    ElasticsearchImportCsvCommand commandImportCsv = new ElasticsearchImportCsvCommand();
+    JCommander jc = JCommander.newBuilder()
+        .addCommand(commandImportCsv)
+        .addCommand(commandTemplate)
+        .addObject(args)
+        .build();
+    jc.parse(args);
+    String parsedCmd = jc.getParsedCommand();
+    try{
+      switch (parsedCmd) {
+        case "importcsv":
+          if (commandImportCsv.isHelp()) {
+            jc.usage();
+          }else{
+            commandImportCsv.execute();
+          }
+          break;
+        case "template":
+          if (commandTemplate.isHelp()) {
+            jc.usage();
+          } else {
+            commandTemplate.execute();
+          }
+          break;
+        default:
+          log.error("Invalid command: {}", parsedCmd);
+          System.exit(1);
+      }
+      System.exit(0);
+    }catch (Exception e){
+      System.exit(1);
+    }
+  }
+}

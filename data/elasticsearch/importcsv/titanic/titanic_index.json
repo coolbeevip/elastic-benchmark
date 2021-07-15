@@ -1,0 +1,63 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 6,
+      "number_of_replicas": 0,
+      "refresh_interval": "300s",
+      "translog": {
+        "durability": "async",
+        "sync_interval": "120s",
+        "flush_threshold_size": "2048mb"
+      },
+      "merge": {
+        "scheduler": {
+          "max_thread_count": 1
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "Date": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "PassengerId": {
+        "type": "integer"
+      },
+      "Survived": {
+        "type": "integer"
+      },
+      "Pclass": {
+        "type": "integer"
+      },
+      "Name": {
+        "type": "keyword"
+      },
+      "Sex": {
+        "type": "keyword"
+      },
+      "Age": {
+        "type": "integer"
+      },
+      "SibSp": {
+        "type": "integer"
+      },
+      "Parch": {
+        "type": "integer"
+      },
+      "Ticket": {
+        "type": "keyword"
+      },
+      "Fare": {
+        "type": "float"
+      },
+      "Cabin": {
+        "type": "keyword"
+      },
+      "Embarked": {
+        "type": "keyword"
+      }
+    }
+  }
+}

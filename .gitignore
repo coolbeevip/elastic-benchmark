@@ -1,0 +1,13 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.lock
+
+### maven ###
+target/
+
+### system ignore ###
+.DS_Store
+

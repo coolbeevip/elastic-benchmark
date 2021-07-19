@@ -34,6 +34,17 @@ java -jar benchmark-elasticsearch-1.0.0.jar importcsv \
 --id 1
 ```
 
+* Search
+
+```shell
+java -jar benchmark-elasticsearch-1.0.0.jar search \
+--host 10.1.207.180:9200,10.1.207.181:9200,10.1.207.182:9200 \
+--name titanic \
+--requests 100 \
+--threads 10 \
+--file example/elasticsearch/importcsv/titanic/search.json
+```
+
 ## Improve write throughput performance
 
 ### Important System Configuration
@@ -177,3 +188,19 @@ curl -X PUT "10.1.207.180:9200/titanic/_settings?pretty" -H 'Content-Type: appli
   }
 }
 '
+
+3. Add slow log configuration
+
+```shell
+curl -X PUT "10.1.207.180:9200/onu/_settings?pretty" -H 'Content-Type: application/json' -d'
+{
+  "index.search.slowlog.threshold.query.warn": "10s",
+  "index.search.slowlog.threshold.query.info": "5s",
+  "index.search.slowlog.threshold.query.debug": "2s",
+  "index.search.slowlog.threshold.query.trace": "500ms",
+  "index.search.slowlog.threshold.fetch.warn": "1s",
+  "index.search.slowlog.threshold.fetch.info": "800ms",
+  "index.search.slowlog.threshold.fetch.debug": "500ms",
+  "index.search.slowlog.threshold.fetch.trace": "200ms",
+  "index.search.slowlog.level": "info"
+}'

@@ -17,6 +17,7 @@ package com.coolbeevip.benchmark.elasticsearch;
 
 import com.beust.jcommander.JCommander;
 import com.coolbeevip.benchmark.elasticsearch.importcsv.ElasticsearchImportCsvCommand;
+import com.coolbeevip.benchmark.elasticsearch.search.ElasticsearchSearchCommand;
 import com.coolbeevip.benchmark.elasticsearch.template.ElasticsearchTemplateCommand;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
@@ -30,9 +31,11 @@ public class Main {
 
     ElasticsearchTemplateCommand commandTemplate = new ElasticsearchTemplateCommand();
     ElasticsearchImportCsvCommand commandImportCsv = new ElasticsearchImportCsvCommand();
+    ElasticsearchSearchCommand searchCommand = new ElasticsearchSearchCommand();
     JCommander jc = JCommander.newBuilder()
         .addCommand(commandImportCsv)
         .addCommand(commandTemplate)
+        .addCommand(searchCommand)
         .addObject(args)
         .build();
     jc.parse(args);
@@ -51,6 +54,13 @@ public class Main {
             jc.usage();
           } else {
             commandTemplate.execute();
+          }
+          break;
+        case "search":
+          if(searchCommand.isHelp()){
+            jc.usage();
+          }else{
+            searchCommand.execute();
           }
           break;
         default:

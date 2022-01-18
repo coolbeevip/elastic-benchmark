@@ -96,8 +96,6 @@ public class NcCommand {
       log.info("throughput request: " + (float) requests / (float) second + " ops/s");
       log.info("throughput request size: " + UnitTools.convertSize(
           (float) this.requestSizeCounter.get() / (float) second) + " ops/s");
-      log.info("throughput response size: " + UnitTools.convertSize(
-          (float) this.responseSizeCounter.get() / (float) second) + " ops/s");
       log.info("==========================================");
     } catch (Exception e) {
       log.error(e.getMessage(), e);

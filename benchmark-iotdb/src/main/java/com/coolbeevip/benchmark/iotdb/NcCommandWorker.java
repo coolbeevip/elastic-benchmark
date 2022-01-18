@@ -17,7 +17,6 @@ public class NcCommandWorker implements Runnable {
 
   private final AtomicLong timerCounter;
   private final AtomicLong requestSizeCounter;
-  private final AtomicLong responseSizeCounter;
   private final CountDownLatch concurrencyLatch;
   private final AtomicLong requestCounter;
   private final int total;
@@ -30,7 +29,6 @@ public class NcCommandWorker implements Runnable {
     this.timerCounter = timerCounter;
     this.requestCounter = requestCounter;
     this.requestSizeCounter = requestSizeCounter;
-    this.responseSizeCounter = responseSizeCounter;
     this.concurrencyLatch = concurrencyLatch;
     this.device = device;
     this.total = total;
@@ -48,12 +46,11 @@ public class NcCommandWorker implements Runnable {
       timestamp = timestamp + 5000;
     }
     try {
-      requestSizeCounter.addAndGet(0);
+      requestSizeCounter.addAndGet(this.device.getDevicePath().length()+(8+8)*batchSize);
       long beginTime = System.currentTimeMillis();
       this.device.batchInsert("temperature", measurementValues, batchSize);
       timerCounter.addAndGet(System.currentTimeMillis() - beginTime);
       this.requestCounter.incrementAndGet();
-      responseSizeCounter.addAndGet(0);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     } finally {

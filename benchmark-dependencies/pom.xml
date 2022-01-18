@@ -40,6 +40,7 @@
     <lettuce.version>5.0.1.RELEASE</lettuce.version>
     <netty-transport-native.version>4.1.65.Final</netty-transport-native.version>
     <junit.version>4.12</junit.version>
+    <iotdb.version>0.13.0-SNAPSHOT</iotdb.version>
   </properties>
 
   <dependencyManagement>
@@ -97,6 +98,27 @@
         <groupId>io.netty</groupId>
         <artifactId>netty-transport-native-epoll</artifactId>
         <version>${netty-transport-native.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.iotdb</groupId>
+        <artifactId>iotdb-session</artifactId>
+        <version>${iotdb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.iotdb</groupId>
+        <artifactId>iotdb-thrift</artifactId>
+        <version>${iotdb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.iotdb</groupId>
+        <artifactId>service-rpc</artifactId>
+        <version>${iotdb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.iotdb</groupId>
+        <artifactId>tsfile</artifactId>
+        <version>${iotdb.version}</version>
       </dependency>
 
       <dependency>

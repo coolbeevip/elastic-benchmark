@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class UnitTools {
 
   public static String convertTime(long millis) {
-    return String.format("%02d min, %02d sec",
+    return String.format("%02d min, %02d sec(%02d millis)",
         TimeUnit.MILLISECONDS.toMinutes(millis),
         TimeUnit.MILLISECONDS.toSeconds(millis) -
-            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)),millis
     );
   }
 

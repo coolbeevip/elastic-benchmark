@@ -32,7 +32,7 @@
         "type": "integer"
       },
       "Name": {
-        "type": "keyword"
+        "type": "wildcard"
       },
       "Sex": {
         "type": "keyword"

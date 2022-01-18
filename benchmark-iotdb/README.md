@@ -7,6 +7,8 @@
 ```shell
 java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar insert \
 --host 10.19.32.51:6667,10.19.32.52:6667,10.19.32.53:6667 \
+--pathPrefix root.benchmark \
+--storageGroup 省份.城市 \
 --requests 1000000 \
 --threads 1 \
 --batchSize 2000

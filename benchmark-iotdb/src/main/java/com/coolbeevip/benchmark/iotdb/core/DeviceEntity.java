@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
+import org.apache.iotdb.rpc.TSStatusCode;
 import org.apache.iotdb.service.rpc.thrift.TSCreateTimeseriesReq;
 import org.apache.iotdb.session.Session;
 import org.apache.iotdb.tsfile.file.metadata.enums.CompressionType;
@@ -58,6 +59,16 @@ public class DeviceEntity {
     return this.measurements.stream().map(
         o -> new MeasurementSchema(o.getPath().substring(o.getPath().lastIndexOf(".") + 1),
             TSDataType.deserialize((byte) o.dataType))).collect(Collectors.toList());
+  }
+
+  public void initStorageGroup() throws IoTDBConnectionException {
+    try {
+      this.session.setStorageGroup(storageGroup);
+    } catch (StatementExecutionException e) {
+      if (e.getStatusCode() != TSStatusCode.PATH_ALREADY_EXIST_ERROR.getStatusCode()) {
+        log.info("StorageGroup {} exist", storageGroup);
+      }
+    }
   }
 
   public void initTimeSeries() {

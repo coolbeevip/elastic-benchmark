@@ -12,8 +12,6 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
-import org.apache.iotdb.rpc.TSStatusCode;
 import org.apache.iotdb.session.Session;
 import org.apache.iotdb.tsfile.file.metadata.enums.CompressionType;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
@@ -31,8 +29,10 @@ public class NcCommand {
   private final AtomicLong responseSizeCounter = new AtomicLong(0);
   @Parameter(names = {"--host", "-H"}, required = true)
   protected List<String> hosts;
-  @Parameter(names = {"--group"})
-  private String storageGroup = "root.test";
+  @Parameter(names = {"--pathPrefix"})
+  private String pathPrefix = "root.benchmark";
+  @Parameter(names = {"--storageGroup"})
+  private String storageGroup = "省份.城市";
   @Parameter(names = {"--requests"})
   private Integer requests = 1;
   @Parameter(names = {"--threads"})
@@ -45,40 +45,32 @@ public class NcCommand {
   public void execute() {
     try {
       SessionFactory factory = new SessionFactory(this.hosts);
-      for(int i=0;i<this.threads;i++){
-        // init session
+      for (int i = 0; i < this.threads; i++) {
         Session ss = factory.createSession();
         ss.open();
 
-        // init storage group
-        try {
-          ss.setStorageGroup(storageGroup);
-        } catch (StatementExecutionException e) {
-          if (e.getStatusCode() != TSStatusCode.PATH_ALREADY_EXIST_ERROR.getStatusCode()) {
-            log.info("StorageGroup {} exist", storageGroup);
-          }
-        }
+        String storageGroupName =  pathPrefix + "." + storageGroup + i;
 
-        CardDevice card = CardDevice.builder().session(ss).storageGroup(storageGroup)
-            .addPath("省份")
-            .addPath("城市")
-            .addPath("机房")
-            .addPath("厂家")
+        CardDevice card = CardDevice.builder().session(ss)
+            .storageGroup(storageGroupName)
+            .addPath("SITE-" + genID())
+            .addPath("VENDORS-" + genID())
             .addPath("ELEMENT-" + genID())
-            .addPath("CARD").addPath("CARD-" + genID())
+            .addPath("CARD")
+            .addPath("CARD-" + genID())
             .addMeasurement("temperature", TSDataType.DOUBLE, TSEncoding.GORILLA,
                 CompressionType.SNAPPY, null, null, null, "板卡温度").build();
+        card.initStorageGroup();
         card.initTimeSeries();
         cardDevices.add(card);
         sessions.add(ss);
       }
 
-
-
       int total = this.requests / this.threads;
       CountDownLatch concurrencyLatch = new CountDownLatch(threads);
       for (int i = 0; i < threads; i++) {
-        NcCommandWorker worker = new NcCommandWorker(concurrencyLatch, cardDevices.get(i), total, batchSize,
+        NcCommandWorker worker = new NcCommandWorker(concurrencyLatch, cardDevices.get(i), total,
+            batchSize,
             timerCounter, requestCounter, requestSizeCounter, responseSizeCounter);
         new Thread(worker).start();
       }
@@ -103,7 +95,7 @@ public class NcCommand {
       log.error(e.getMessage(), e);
     } finally {
       sessions.forEach(s -> {
-        if ( s != null) {
+        if (s != null) {
           try {
             s.close();
           } catch (IoTDBConnectionException e) {

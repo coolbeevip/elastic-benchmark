@@ -2,6 +2,7 @@ package com.coolbeevip.benchmark.iotdb;
 
 import com.beust.jcommander.JCommander;
 import com.coolbeevip.benchmark.iotdb.insert.InsertCommand;
+import com.coolbeevip.benchmark.iotdb.select.SelectCommand;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,11 @@ public class Main {
 
   public static void main(String[] args) {
 
-    InsertCommand commandNc = new InsertCommand();
+    InsertCommand commandInsert = new InsertCommand();
+    SelectCommand commandSelect = new SelectCommand();
     JCommander jc = JCommander.newBuilder()
-        .addCommand(commandNc)
+        .addCommand(commandInsert)
+        .addCommand(commandSelect)
         .addObject(args)
         .build();
     jc.parse(args);
@@ -22,7 +25,10 @@ public class Main {
     try{
       switch (parsedCmd) {
         case "insert":
-          commandNc.execute();
+          commandInsert.execute();
+          break;
+        case "select":
+          commandSelect.execute();
           break;
         default:
           log.error("Invalid command: {}", parsedCmd);

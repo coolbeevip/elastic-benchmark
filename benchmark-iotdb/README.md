@@ -22,7 +22,7 @@ java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar insert \
 
 IoTDB Cluster
 
-| CPU | MEM | OS | IoTDB | 
+| CPU | MEM | OS | IoTDB |
 | -- | ---- | ---- | ---- |
 | Intel Xeon Processor (Skylake, IBRS) 4Core 2GHz | 32G | CentOS Linux release 7.9.2009 | JDK8 -Xms400M -Xmx8043M |
 | Intel Xeon Processor (Skylake, IBRS) 4Core 2GHz | 32G | CentOS Linux release 7.9.2009 | JDK8 -Xms400M -Xmx8043M |
@@ -101,3 +101,250 @@ Benchmark Client
 ```
 
 结论：经过测试最优参数为使用单线程已每批次2000的数量写入，写入可达到 20W/QPS
+
+## 批量查询
+
+#### 时间区间查询（返回 10 条数据）
+
+```shell
+java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar select \
+--host 10.19.32.51:6667,10.19.32.52:6667,10.19.32.53:6667 \
+--requests 10000 \
+--threads 4 \
+--timeout 10000 \
+--sql "select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 and time < 2022-01-18T17:01:00.000+08:00"
+```
+
+* 查询 1 万次，10 并发
+
+```shell
+19:15:38.610 [main] INFO ==========================================
+19:15:38.613 [main] INFO  IoTDB Batch Insert
+19:15:38.613 [main] INFO ----------------- params ------------------
+19:15:38.613 [main] INFO requests: 10000
+19:15:38.613 [main] INFO threads: 10
+19:15:38.613 [main] INFO ----------------- output ------------------
+19:15:38.613 [main] INFO succeed : 10000
+19:15:38.613 [main] INFO fails : 0
+19:15:38.616 [main] INFO total time: 00 min, 05 sec(5932 millis)
+19:15:38.620 [main] INFO throughput request: 175.4386 ops/s
+19:15:38.620 [main] INFO throughput request size: 50.03 KB ops/s
+19:15:38.620 [main] INFO throughput response row size: 2105.2632 ops/s
+19:15:38.620 [main] INFO ==========================================
+```
+
+* 查询 1 万次，50 并发
+
+```shell
+19:17:27.023 [main] INFO ==========================================
+19:17:27.026 [main] INFO  IoTDB Batch Insert
+19:17:27.026 [main] INFO ----------------- params ------------------
+19:17:27.026 [main] INFO requests: 10000
+19:17:27.026 [main] INFO threads: 50
+19:17:27.026 [main] INFO ----------------- output ------------------
+19:17:27.026 [main] INFO succeed : 10000
+19:17:27.026 [main] INFO fails : 0
+19:17:27.030 [main] INFO total time: 00 min, 02 sec(2761 millis)
+19:17:27.034 [main] INFO throughput request: 81.30081 ops/s
+19:17:27.035 [main] INFO throughput request size: 23.18 KB ops/s
+19:17:27.035 [main] INFO throughput response row size: 975.60974 ops/s
+19:17:27.035 [main] INFO ==========================================
+```
+
+#### 大于时间查询（limit 1000 条数据）
+
+```shell
+java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar select \
+--host 10.19.32.51:6667,10.19.32.52:6667,10.19.32.53:6667 \
+--requests 10000 \
+--threads 50 \
+--timeout 10000 \
+--sql "select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 limit 1000"
+```
+
+* 查询 1 万次，10 并发
+
+```shell
+19:19:40.658 [main] INFO ==========================================
+19:19:40.661 [main] INFO  IoTDB Batch Insert
+19:19:40.662 [main] INFO ----------------- params ------------------
+19:19:40.662 [main] INFO requests: 10000
+19:19:40.662 [main] INFO threads: 10
+19:19:40.662 [main] INFO ----------------- output ------------------
+19:19:40.662 [main] INFO succeed : 10000
+19:19:40.662 [main] INFO fails : 0
+19:19:40.666 [main] INFO total time: 00 min, 08 sec(8291 millis)
+19:19:40.671 [main] INFO throughput request: 123.45679 ops/s
+19:19:40.672 [main] INFO throughput request size: 31.59 KB ops/s
+19:19:40.672 [main] INFO throughput response row size: 123456.79 ops/s
+19:19:40.672 [main] INFO ==========================================
+```
+
+* 查询 1 万次，50 并发
+
+```shell
+19:20:20.037 [main] INFO ==========================================
+19:20:20.040 [main] INFO  IoTDB Batch Insert
+19:20:20.040 [main] INFO ----------------- params ------------------
+19:20:20.040 [main] INFO requests: 10000
+19:20:20.040 [main] INFO threads: 50
+19:20:20.040 [main] INFO ----------------- output ------------------
+19:20:20.040 [main] INFO succeed : 10000
+19:20:20.040 [main] INFO fails : 0
+19:20:20.044 [main] INFO total time: 00 min, 04 sec(4731 millis)
+19:20:20.048 [main] INFO throughput request: 44.84305 ops/s
+19:20:20.048 [main] INFO throughput request size: 11.47 KB ops/s
+19:20:20.048 [main] INFO throughput response row size: 44843.05 ops/s
+19:20:20.048 [main] INFO ==========================================
+```
+
+#### 大于时间排序查询（limit 1000 条数据）
+
+```shell
+java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar select \
+--host 10.19.32.51:6667,10.19.32.52:6667,10.19.32.53:6667 \
+--requests 10000 \
+--threads 50 \
+--timeout 10000 \
+--sql "select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 order by time limit 1000"
+```
+
+* 查询 1 万次，10 并发
+
+```shell
+19:21:20.410 [main] INFO ==========================================
+19:21:20.413 [main] INFO  IoTDB Batch Insert
+19:21:20.413 [main] INFO ----------------- params ------------------
+19:21:20.413 [main] INFO requests: 10000
+19:21:20.413 [main] INFO threads: 10
+19:21:20.413 [main] INFO ----------------- output ------------------
+19:21:20.413 [main] INFO succeed : 10000
+19:21:20.413 [main] INFO fails : 0
+19:21:20.422 [main] INFO total time: 00 min, 08 sec(8900 millis)
+19:21:20.427 [main] INFO throughput request: 116.27907 ops/s
+19:21:20.429 [main] INFO throughput request size: 31.34 KB ops/s
+19:21:20.430 [main] INFO throughput response row size: 116279.07 ops/s
+19:21:20.430 [main] INFO ==========================================
+```
+
+* 查询 1 万次，50 并发
+
+```shell
+19:21:47.794 [main] INFO ==========================================
+19:21:47.797 [main] INFO  IoTDB Batch Insert
+19:21:47.797 [main] INFO ----------------- params ------------------
+19:21:47.797 [main] INFO requests: 10000
+19:21:47.797 [main] INFO threads: 50
+19:21:47.797 [main] INFO ----------------- output ------------------
+19:21:47.797 [main] INFO succeed : 10000
+19:21:47.797 [main] INFO fails : 0
+19:21:47.802 [main] INFO total time: 00 min, 05 sec(5020 millis)
+19:21:47.812 [main] INFO throughput request: 43.47826 ops/s
+19:21:47.813 [main] INFO throughput request size: 11.72 KB ops/s
+19:21:47.813 [main] INFO throughput response row size: 43478.26 ops/s
+19:21:47.813 [main] INFO ==========================================
+```
+
+#### 时间区间聚合查询
+
+```shell
+java -jar benchmark-iotdb-1.0.0-SNAPSHOT.jar select \
+--host 10.19.32.51:6667,10.19.32.52:6667,10.19.32.53:6667 \
+--requests 10000 \
+--threads 50 \
+--timeout 10000 \
+--sql "select count(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 group by ([2022-01-18T00:00:00, 2022-01-19T00:00:00),1h)"
+```
+
+* 查询 1 万次，10 并发
+
+```shell
+19:24:11.859 [main] INFO ==========================================
+19:24:11.866 [main] INFO  IoTDB Batch Insert
+19:24:11.866 [main] INFO ----------------- params ------------------
+19:24:11.866 [main] INFO requests: 10000
+19:24:11.867 [main] INFO threads: 10
+19:24:11.867 [main] INFO ----------------- output ------------------
+19:24:11.867 [main] INFO succeed : 10000
+19:24:11.867 [main] INFO fails : 0
+19:24:11.870 [main] INFO total time: 00 min, 06 sec(6833 millis)
+19:24:11.879 [main] INFO throughput request: 161.29033 ops/s
+19:24:11.880 [main] INFO throughput request size: 42.84 KB ops/s
+19:24:11.880 [main] INFO throughput response row size: 3870.9678 ops/s
+19:24:11.880 [main] INFO ==========================================
+```
+
+* 查询 1 万次，50 并发
+
+```shell
+19:24:36.485 [main] INFO ==========================================
+19:24:36.487 [main] INFO  IoTDB Batch Insert
+19:24:36.487 [main] INFO ----------------- params ------------------
+19:24:36.487 [main] INFO requests: 10000
+19:24:36.488 [main] INFO threads: 50
+19:24:36.488 [main] INFO ----------------- output ------------------
+19:24:36.488 [main] INFO succeed : 10000
+19:24:36.488 [main] INFO fails : 0
+19:24:36.492 [main] INFO total time: 00 min, 03 sec(3031 millis)
+19:24:36.495 [main] INFO throughput request: 72.9927 ops/s
+19:24:36.496 [main] INFO throughput request size: 19.39 KB ops/s
+19:24:36.496 [main] INFO throughput response row size: 1751.8248 ops/s
+19:24:36.496 [main] INFO ==========================================
+```
+
+## 常用查询
+
+时间比较
+
+```sql
+select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00
+```
+
+时间范围
+
+```sql
+select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 and time < 2022-01-18T17:01:00.000+08:00
+```
+
+排序 
+
+```sql
+select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 order by time limit 10;
+```
+
+翻页
+
+```sql
+select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time > 2022-01-18T17:00:00.000+08:00 order by time desc offset 10 limit 10;
+```
+
+空值填充
+
+```sql
+select temperature from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 where time = 2022-01-18T17:00:00.000+08:00 fill(float[previous, 1m]) 
+```
+
+聚合-数量
+
+```
+select count(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763
+```
+
+聚合-时间
+
+```sql
+select count(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763 group by ([2022-01-18T00:00:00, 2022-01-22T00:00:00),1d);
+```
+
+聚合-最大值，最小值
+
+```
+select max_value(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763
+select min_value(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763
+```
+
+
+
+
+
+

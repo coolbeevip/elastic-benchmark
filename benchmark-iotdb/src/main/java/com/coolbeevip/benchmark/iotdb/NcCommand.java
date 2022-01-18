@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.rpc.TSStatusCode;
 import org.apache.iotdb.session.Session;
-import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.CompressionType;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSEncoding;
@@ -62,7 +60,11 @@ public class NcCommand {
         }
 
         CardDevice card = CardDevice.builder().session(ss).storageGroup(storageGroup)
-            .addPath("省份").addPath("城市").addPath("机房").addPath("厂家").addPath("ELEMENT-" + genID())
+            .addPath("省份")
+            .addPath("城市")
+            .addPath("机房")
+            .addPath("厂家")
+            .addPath("ELEMENT-" + genID())
             .addPath("CARD").addPath("CARD-" + genID())
             .addMeasurement("temperature", TSDataType.DOUBLE, TSEncoding.GORILLA,
                 CompressionType.SNAPPY, null, null, null, "板卡温度").build();

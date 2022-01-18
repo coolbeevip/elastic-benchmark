@@ -1,6 +1,7 @@
 package com.coolbeevip.benchmark.iotdb;
 
 import com.beust.jcommander.JCommander;
+import com.coolbeevip.benchmark.iotdb.insert.InsertCommand;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,7 @@ public class Main {
 
   public static void main(String[] args) {
 
-    NcCommand commandNc = new NcCommand();
+    InsertCommand commandNc = new InsertCommand();
     JCommander jc = JCommander.newBuilder()
         .addCommand(commandNc)
         .addObject(args)

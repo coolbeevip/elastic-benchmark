@@ -1,4 +1,4 @@
-package com.coolbeevip.benchmark.iotdb;
+package com.coolbeevip.benchmark.iotdb.insert;
 
 
 import com.coolbeevip.benchmark.iotdb.core.DeviceEntity;
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NcCommandWorker implements Runnable {
+public class InsertCommandWorker implements Runnable {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -23,7 +23,7 @@ public class NcCommandWorker implements Runnable {
   private final int batchSize;
   private final DeviceEntity device;
 
-  public NcCommandWorker(CountDownLatch concurrencyLatch, DeviceEntity device, int total, int batchSize,
+  public InsertCommandWorker(CountDownLatch concurrencyLatch, DeviceEntity device, int total, int batchSize,
       AtomicLong timerCounter, AtomicLong requestCounter, AtomicLong requestSizeCounter,
       AtomicLong responseSizeCounter) {
     this.timerCounter = timerCounter;

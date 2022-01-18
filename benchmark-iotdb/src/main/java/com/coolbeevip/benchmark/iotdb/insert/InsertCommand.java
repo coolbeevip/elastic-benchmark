@@ -1,4 +1,4 @@
-package com.coolbeevip.benchmark.iotdb;
+package com.coolbeevip.benchmark.iotdb.insert;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Parameters(commandNames = {"insert"})
-public class NcCommand {
+public class InsertCommand {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private final AtomicLong timerCounter = new AtomicLong(0);
@@ -69,7 +69,7 @@ public class NcCommand {
       int total = this.requests / this.threads;
       CountDownLatch concurrencyLatch = new CountDownLatch(threads);
       for (int i = 0; i < threads; i++) {
-        NcCommandWorker worker = new NcCommandWorker(concurrencyLatch, cardDevices.get(i), total,
+        InsertCommandWorker worker = new InsertCommandWorker(concurrencyLatch, cardDevices.get(i), total,
             batchSize,
             timerCounter, requestCounter, requestSizeCounter, responseSizeCounter);
         new Thread(worker).start();

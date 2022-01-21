@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.session.Session;
 import org.apache.iotdb.tsfile.file.metadata.enums.CompressionType;
@@ -43,13 +44,11 @@ public class InsertCommand extends AbstractCommand {
         String storageGroupName =  pathPrefix + "." + storageGroup + i;
         CardDevice card = CardDevice.builder().session(ss)
             .storageGroup(storageGroupName)
-            .addPath("SITE-" + genID())
-            .addPath("VENDORS-" + genID())
-            .addPath("ELEMENT-" + genID())
-            .addPath("CARD")
-            .addPath("CARD-" + genID())
-            .addMeasurement("temperature", TSDataType.DOUBLE, TSEncoding.GORILLA,
-                CompressionType.SNAPPY, null, null, null, "板卡温度").build();
+            .addPath("SITE_" + genID())
+            .addPath("ELEMENT_" + genID())
+            .addPath("CARD_" + genID())
+            .addMeasurement("temp", TSDataType.DOUBLE, TSEncoding.GORILLA,
+                CompressionType.SNAPPY, null, null, null, "温度").build();
         card.initStorageGroup();
         card.initTimeSeries();
         cardDevices.add(card);
@@ -73,6 +72,8 @@ public class InsertCommand extends AbstractCommand {
       log.info("==========================================");
       log.info(" IoTDB Batch Insert");
       log.info("----------------- params ------------------");
+      log.info("timeseries: "+this.cardDevices.stream().map(c -> c.getDevicePath()).collect(
+          Collectors.joining(",")));
       log.info("requests: " + this.requests);
       log.info("batchSize: " + this.batchSize);
       log.info("threads: " + this.threads);

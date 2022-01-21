@@ -48,7 +48,7 @@ public class InsertCommandWorker implements Runnable {
     try {
       requestSizeCounter.addAndGet(this.device.getDevicePath().length()+(8+8)*batchSize);
       long beginTime = System.currentTimeMillis();
-      this.device.batchInsert("temperature", measurementValues, batchSize);
+      this.device.batchInsert("temp", measurementValues, batchSize);
       timerCounter.addAndGet(System.currentTimeMillis() - beginTime);
       this.requestCounter.incrementAndGet();
     } catch (Exception e) {

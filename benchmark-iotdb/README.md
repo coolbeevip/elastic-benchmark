@@ -343,8 +343,37 @@ select max_value(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f65
 select min_value(temperature) from root.benchmark.省份.城市3.SITE-e06ed84f654a479a89dc80fce8e8f578.VENDORS-b21b59965f644ed3b137e618ccd03571.ELEMENT-fe81bc80ea394f8c8179962b158d5ac0.CARD.CARD-52b0fae4bf0940d4b7eb4bf9d9fc4763
 ```
 
+## 其他
 
+#### 0.13.0 版本变化
 
+PATH 名称中 `-` 字符作为保留字，使用时需要使用  ` 扩起来，例如:
 
+```
+root.test.`NET-1`.s1
+```
 
+#### 升级注意事项
+
+1. 先在 CLI 中 flush
+2. 停止老版本程序
+3. 如果 data/wal 目录还存在则手动删除
+4. 升级程序
+5. 启动新版本程序
+
+## 集群可用性
+
+### 三节点
+
+* consistency_level=mid 
+* default_replica_num=2
+
+1. 启动 A,B,C(首次启动三个节点都启动成功后才可以对外提供服务)
+2. 插入，查询正常
+3. 停止 C
+4. 查询正常(等待重新选举leader后，查询正常)
+   > IoTDB> show timeseries
+   show timeseries
+   Msg: 411: Error occurred in query process: check consistency failed, error message=mid consistency, localAppliedId is smaller than the leaderCommitId
+5. 插入，查询正常
 
